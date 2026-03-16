@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 10px; text-align: left; border: 1px solid #ddd; }
+        th { background-color: #f4f4f4; }
+        .badge { padding: 5px 10px; border-radius: 5px; }
+        .gold { background-color: gold; }
+        .silver { background-color: silver; }
+        .bronze { background-color: #cd7f32; }
+    </style>
+</head>
+<body>
+    <h1>Global Leaderboard</h1>
+    <table id="leaderboard">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Player</th>
+                <th>Level</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Leaderboard data will be inserted here -->
+        </tbody>
+    </table>
+
+    <script>
+        async function fetchLeaderboard() {
+            try {
+                const response = await fetch('leaderboard.json');
+                const data = await response.json();
+                const filtered = data.filter(player => player.level >= 50);
+
+                const leaderboard = document.getElementById('leaderboard').getElementsByTagName('tbody')[0];
+                leaderboard.innerHTML = ''; // Clear the table
+
+                filtered.sort((a, b) => a.rank - b.rank);
+                filtered.forEach((player) => {
+                    const row = leaderboard.insertRow();
+                    const badgeClass = (player.rank === 1) ? 'gold' : (player.rank === 2) ? 'silver' : (player.rank === 3) ? 'bronze' : '';
+                    row.innerHTML = `<td class='badge ${badgeClass}'>${player.rank}</td><td>${player.name}</td><td>${player.level}</td>`;
+                });
+            } catch (err) {
+                console.error('Error fetching leaderboard:', err);
+            }
+        }
+
+        fetchLeaderboard(); // Initial fetch
+        setInterval(fetchLeaderboard, 30000); // Refresh every 30 seconds
+    </script>
+</body>
+</html>
