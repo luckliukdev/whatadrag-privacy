@@ -10,14 +10,12 @@ permissions:
 jobs:
   update-score:
     runs-on: ubuntu-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
       - name: Setup Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v5
         with:
           python-version: '3.x'
 
@@ -26,150 +24,69 @@ jobs:
           PAYLOAD: ${{ toJson(github.event.client_payload) }}
         run: |
           python3 -c "
-          import json, os, traceback
-
-          def safe_int(value, default=0):
-              try:
-                  return int(value)
-              except:
-                  return default
-
-          def safe_time_sec(time_str):
-              if not isinstance(time_str, str):
-                  return 999999
-              parts = time_str.split(':')
-              if len(parts) != 2:
-                  return 999999
-              try:
-                  m = int(parts[0])
-                  s = int(parts[1])
-                  return m * 60 + s
-              except:
-                  return 999999
-
+          import json, os
+          
+          # Carica dati evento
           try:
-              # Carica dati evento
-              payload = json.loads(os.environ.get('PAYLOAD', '{}'))
-              username = str(payload.get('username', '') or '').strip()
-              if not username:
-                  print('Warning: username mancante da payload, uso placeholder "UnknownPlayer"')
-                  username = 'UnknownPlayer'
-              print(f'Processing score for: {username}')
-
-              file_path = 'leaderboard.json'
-              leaderboard = []
-              if os.path.exists(file_path):
-                  try:
-                      with open(file_path, 'r', encoding='utf-8') as f:
-                          leaderboard = json.load(f)
-                          if isinstance(leaderboard, dict):
-                              leaderboard = leaderboard.get('players', [])
-                          if not isinstance(leaderboard, list):
-                              leaderboard = []
-                  except Exception as e:
-                      print(f'Warning reading existing leaderboard: {e}')
-                      leaderboard = []
-
-              level = safe_int(payload.get('level'), 0)
-              score = safe_int(payload.get('score'), 0)
-              time_str = payload.get('time', '99:99')
-              if not isinstance(time_str, str):
-                  time_str = '99:99'
-
-              new_entry = {'name': username, 'score': score, 'level': level, 'time': time_str}
-              leaderboard.append(new_entry)
-
-              leaderboard.sort(
-                  key=lambda item: (
-                      -safe_int(item.get('level', 0)),
-                      safe_time_sec(item.get('time', '99:99')),
-                      -safe_int(item.get('score', 0))
-                  )
-              )
-
-              unique_leaderboard = []
-              seen_users = set()
-              for entry in leaderboard:
-                  normalized_name = str(entry.get('name', '')).strip().lower()
-                  if not normalized_name:
-                      continue
-                  if normalized_name not in seen_users:
-                      seen_users.add(normalized_name)
-                      unique_leaderboard.append(entry)
-
-              leaderboard = unique_leaderboard[:100]
-
-              for i, entry in enumerate(leaderboard):
-                  entry['rank'] = i + 1
-
-              with open(file_path, 'w', encoding='utf-8') as f:
-                  json.dump(leaderboard, f, indent=4, ensure_ascii=False)
-
-              print('Leaderboard updated successfully')
-          except Exception as err:
-              print('FALLITO update leaderboard', err)
-              traceback.print_exc()
-              raise SystemExit(1)
-          "
-
+              payload = json.loads(os.environ['PAYLOAD'])
+              print(f'Processing score for: {payload.get(\"username\")}')
+          except Exception as e:
+              print(f'Error reading payload: {e}')
+              exit(1)
+          
+          file_path = 'leaderboard.json'
+          
           # Carica o crea classifica esistente
           leaderboard = []
           if os.path.exists(file_path):
               try:
-                  with open(file_path, 'r', encoding='utf-8') as f:
+                  with open(file_path, 'r') as f:
                       leaderboard = json.load(f)
-                      if isinstance(leaderboard, dict):
-                          leaderboard = leaderboard.get('players', [])
-                      if not isinstance(leaderboard, list):
-                          leaderboard = []
-              except Exception as e:
-                  print(f'Warning reading existing leaderboard: {e}')
+              except:
                   leaderboard = []
 
           # Aggiungi nuovo punteggio
-          level = safe_int(payload.get('level'), 0)
-          score = safe_int(payload.get('score'), 0)
-          time_str = payload.get('time', '99:99')
-          if not isinstance(time_str, str):
-              time_str = '99:99'
-
+          # NOTA: Il 'rank' viene calcolato dopo l'ordinamento
           new_entry = {
-              'name': username,
-              'score': score,
-              'level': level,
-              'time': time_str
+              'name': payload.get('username'),
+              'score': payload.get('score'),
+              'level': payload.get('level'),
+              'time': payload.get('time')
           }
           leaderboard.append(new_entry)
+          
+          # Funzione helper sicura per lo score
+          def safe_score(item):
+              try:
+                  return int(item.get('score', 0))
+              except:
+                  return 0
 
-          # Ordina per livello (desc), tempo (asc), score (desc)
-          leaderboard.sort(
-              key=lambda item: (
-                  -safe_int(item.get('level', 0)),
-                  safe_time_sec(item.get('time', '99:99')),
-                  -safe_int(item.get('score', 0))
-              )
-          )
-
-          # Deduplica mantenendo il miglior risultato per utente
+          # Ordina per Score decrescente (allineato con la logica dell'App: Level alto + Tempo basso)
+          leaderboard.sort(key=safe_score, reverse=True)
+          
+          # --- DEDUPLICAZIONE INTELLIGENTE ---
+          # Mantiene solo il punteggio migliore (il primo trovato dopo il sort) per ogni utente
           unique_leaderboard = []
           seen_users = set()
           for entry in leaderboard:
-              normalized_name = str(entry.get('name', '')).strip().lower()
-              if not normalized_name:
-                  continue
-              if normalized_name not in seen_users:
-                  seen_users.add(normalized_name)
+              name = entry.get('name')
+              if name not in seen_users:
                   unique_leaderboard.append(entry)
-
+                  seen_users.add(name)
+          
           leaderboard = unique_leaderboard
+          
+          # Tieni Top 100
           leaderboard = leaderboard[:100]
-
-          # Assegna rank progressivo
+          
+          # --- ASSEGNAZIONE RANK ---
+          # Calcola la posizione (1, 2, 3...) e salvala nel JSON per l'HTML
           for i, entry in enumerate(leaderboard):
               entry['rank'] = i + 1
 
-          with open(file_path, 'w', encoding='utf-8') as f:
-              json.dump(leaderboard, f, indent=4, ensure_ascii=False)
+          with open(file_path, 'w') as f:
+              json.dump(leaderboard, f, indent=4)
           "
 
       - name: Commit and Push if Changed
@@ -177,9 +94,11 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git add leaderboard.json
+          
+          # Solo se ci sono cambiamenti, fai commit e push
           if ! git diff --staged --quiet; then
-            git commit -m \"Update leaderboard: ${{ github.event.client_payload.username }}\"
+            git commit -m "Update leaderboard: ${{ github.event.client_payload.username }}"
             git push
           else
-            echo \"No changes to commit.\"
+            echo "No changes to commit."
           fi
