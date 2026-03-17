@@ -33,7 +33,7 @@
     <script>
         async function fetchLeaderboard() {
             try {
-                const response = await fetch('leaderboard.json');
+                const response = await fetch('leaderboard.json?v=' + new Date().getTime());
                 const data = await response.json();
                 const filtered = data.filter(player => player.level >= 50);
 
