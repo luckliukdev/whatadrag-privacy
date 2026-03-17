@@ -89,7 +89,9 @@
       letter-spacing: 0.09rem;
       padding: 12px 14px;
       border-bottom: 1px solid rgba(162, 214, 255, .22);
+      text-align: left;
     }
+    th:first-child, td:first-child { text-align: center; width: 80px; }
     tbody tr {
       background: rgba(22, 35, 67, 0.5);
       transition: background .2s ease;
@@ -102,7 +104,7 @@
       color: #e8ebfc;
       font-size: 0.95rem;
     }
-    .badge { border-radius: 999px; padding: 4px 10px; color:#111; font-weight:800; }
+    .badge { border-radius: 999px; padding: 4px 8px; color:#111; font-weight:800; display:inline-block; min-width:26px; text-align:center; }
     .gold { background: linear-gradient(135deg,#ffd82b,#d0a80d); }
     .silver { background: linear-gradient(135deg,#e9ecef,#a9b3bb); }
     .bronze { background: linear-gradient(135deg,#c48047,#782f1b); }
@@ -157,7 +159,7 @@
           else if (player.rank===2) badgeClass='silver';
           else if (player.rank===3) badgeClass='bronze';
           return `<tr>
-            <td class="badge ${badgeClass}">${player.rank}</td>
+            <td><span class="badge ${badgeClass}">${player.rank}</span></td>
             <td>${player.name}</td>
             <td>${player.level}</td>
             <td>${player.time}</td>
