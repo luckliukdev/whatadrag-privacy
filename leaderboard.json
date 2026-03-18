@@ -42,17 +42,24 @@
         "rank": 6
     },
     {
+        "name": "LUCA PC",
+        "score": 199660,
+        "level": 2,
+        "time": "00:34",
+        "rank": 7
+    },
+    {
         "name": "TEST",
         "score": 99990,
         "level": 1,
         "time": "00:01",
-        "rank": 7
+        "rank": 8
     },
     {
         "name": "LITT",
         "score": 99890,
         "level": 1,
         "time": "00:11",
-        "rank": 8
+        "rank": 9
     }
 ]
