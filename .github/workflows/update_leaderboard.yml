@@ -4,6 +4,11 @@ on:
   repository_dispatch:
     types: [submit-score]
 
+# Impedisce conflitti di git push se più utenti inviano punteggi contemporaneamente.
+# Mette in coda i job (cancel-in-progress: false è il default, che va bene qui).
+concurrency:
+  group: leaderboard-update
+
 permissions:
   contents: write
 
@@ -25,7 +30,7 @@ jobs:
         run: |
           python3 -c "
           import json, os
-
+          
           # Carica dati evento
           try:
               payload = json.loads(os.environ['PAYLOAD'])
@@ -33,9 +38,9 @@ jobs:
           except Exception as e:
               print(f'Error reading payload: {e}')
               exit(1)
-
+          
           file_path = 'leaderboard.json'
-
+          
           # Carica o crea classifica esistente
           leaderboard = []
           if os.path.exists(file_path):
@@ -46,6 +51,7 @@ jobs:
                   leaderboard = []
 
           # Aggiungi nuovo punteggio
+          # NOTA: Il 'rank' viene calcolato dopo l'ordinamento
           new_entry = {
               'name': payload.get('username'),
               'score': payload.get('score'),
@@ -53,7 +59,7 @@ jobs:
               'time': payload.get('time')
           }
           leaderboard.append(new_entry)
-
+          
           # Funzione helper sicura per lo score
           def safe_score(item):
               try:
@@ -63,7 +69,7 @@ jobs:
 
           # Ordina per Score decrescente (allineato con la logica dell'App: Level alto + Tempo basso)
           leaderboard.sort(key=safe_score, reverse=True)
-
+          
           # --- DEDUPLICAZIONE INTELLIGENTE ---
           # Mantiene solo il punteggio migliore (il primo trovato dopo il sort) per ogni utente
           unique_leaderboard = []
@@ -73,12 +79,12 @@ jobs:
               if name not in seen_users:
                   unique_leaderboard.append(entry)
                   seen_users.add(name)
-
+          
           leaderboard = unique_leaderboard
-
+          
           # Tieni Top 100
           leaderboard = leaderboard[:100]
-
+          
           # --- ASSEGNAZIONE RANK ---
           # Calcola la posizione (1, 2, 3...) e salvala nel JSON per l'HTML
           for i, entry in enumerate(leaderboard):
@@ -93,7 +99,7 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git add leaderboard.json
-
+          
           # Solo se ci sono cambiamenti, fai commit e push
           if ! git diff --staged --quiet; then
             git commit -m "Update leaderboard: ${{ github.event.client_payload.username }}"
