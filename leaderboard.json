@@ -21,66 +21,73 @@
         "rank": 3
     },
     {
+        "name": "MANNAGGIA",
+        "score": 5388960,
+        "level": 54,
+        "time": "18:24",
+        "rank": 4
+    },
+    {
         "name": "LIUK",
         "score": 2296960,
         "level": 23,
         "time": "05:04",
-        "rank": 4
+        "rank": 5
     },
     {
         "name": "LEX",
         "score": 1897790,
         "level": 19,
         "time": "03:41",
-        "rank": 5
+        "rank": 6
     },
     {
         "name": "ROXY",
         "score": 1793050,
         "level": 18,
         "time": "11:35",
-        "rank": 6
+        "rank": 7
     },
     {
         "name": "NICOLE",
         "score": 1497990,
         "level": 15,
         "time": "03:21",
-        "rank": 7
+        "rank": 8
     },
     {
         "name": "LIUK_TEST_",
         "score": 1198950,
         "level": 12,
         "time": "01:45",
-        "rank": 8
+        "rank": 9
     },
     {
         "name": "ALESSANDRO",
         "score": 1098690,
         "level": 11,
         "time": "02:11",
-        "rank": 9
+        "rank": 10
     },
     {
         "name": "SIMO",
         "score": 1098250,
         "level": 11,
         "time": "02:55",
-        "rank": 10
+        "rank": 11
     },
     {
         "name": "PLAYER",
         "score": 1097160,
         "level": 11,
         "time": "04:44",
-        "rank": 11
+        "rank": 12
     },
     {
         "name": "ANTO",
         "score": 1092930,
         "level": 11,
         "time": "11:47",
-        "rank": 12
+        "rank": 13
     }
 ]
