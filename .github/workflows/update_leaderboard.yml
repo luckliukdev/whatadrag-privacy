@@ -70,6 +70,8 @@ jobs:
           # Ordina per Score decrescente (allineato con la logica dell'App: Level alto + Tempo basso)
           leaderboard.sort(key=safe_score, reverse=True)
           
+          # NESSUNA DEDUPLICAZIONE: Accettiamo omonimi e miglioramenti dello stesso utente.
+          
           # Tieni Top 100
           leaderboard = leaderboard[:100]
           
