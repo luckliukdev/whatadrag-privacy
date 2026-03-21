@@ -70,18 +70,6 @@ jobs:
           # Ordina per Score decrescente (allineato con la logica dell'App: Level alto + Tempo basso)
           leaderboard.sort(key=safe_score, reverse=True)
           
-          # --- DEDUPLICAZIONE INTELLIGENTE ---
-          # Mantiene solo il punteggio migliore (il primo trovato dopo il sort) per ogni utente
-          unique_leaderboard = []
-          seen_users = set()
-          for entry in leaderboard:
-              name = entry.get('name')
-              if name not in seen_users:
-                  unique_leaderboard.append(entry)
-                  seen_users.add(name)
-          
-          leaderboard = unique_leaderboard
-          
           # Tieni Top 100
           leaderboard = leaderboard[:100]
           
