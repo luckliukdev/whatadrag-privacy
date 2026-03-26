@@ -91,108 +91,115 @@
         "rank": 13
     },
     {
+        "name": "LEX",
+        "score": 3095080,
+        "level": 31,
+        "time": "08:12",
+        "rank": 14
+    },
+    {
         "name": "LIUK",
         "score": 2296960,
         "level": 23,
         "time": "05:04",
-        "rank": 14
+        "rank": 15
     },
     {
         "name": "LEX",
         "score": 1897790,
         "level": 19,
         "time": "03:41",
-        "rank": 15
+        "rank": 16
     },
     {
         "name": "ROXY",
         "score": 1793050,
         "level": 18,
         "time": "11:35",
-        "rank": 16
+        "rank": 17
     },
     {
         "name": "MORTAL",
         "score": 1597070,
         "level": 16,
         "time": "04:53",
-        "rank": 17
+        "rank": 18
     },
     {
         "name": "NICOLE",
         "score": 1497990,
         "level": 15,
         "time": "03:21",
-        "rank": 18
+        "rank": 19
     },
     {
         "name": "PLAYER",
         "score": 1396450,
         "level": 14,
         "time": "05:55",
-        "rank": 19
+        "rank": 20
     },
     {
         "name": "SIMO",
         "score": 1198490,
         "level": 12,
         "time": "02:31",
-        "rank": 20
+        "rank": 21
     },
     {
         "name": "MORTAL",
         "score": 1197740,
         "level": 12,
         "time": "03:46",
-        "rank": 21
+        "rank": 22
     },
     {
         "name": "LIUK",
         "score": 1098760,
         "level": 11,
         "time": "02:04",
-        "rank": 22
+        "rank": 23
     },
     {
         "name": "ALESSANDRO",
         "score": 1098690,
         "level": 11,
         "time": "02:11",
-        "rank": 23
+        "rank": 24
     },
     {
         "name": "NICC",
         "score": 1098320,
         "level": 11,
         "time": "02:48",
-        "rank": 24
+        "rank": 25
     },
     {
         "name": "SIMO",
         "score": 1098250,
         "level": 11,
         "time": "02:55",
-        "rank": 25
+        "rank": 26
     },
     {
         "name": "PLAYER",
         "score": 1097160,
         "level": 11,
         "time": "04:44",
-        "rank": 26
+        "rank": 27
     },
     {
         "name": "ANTO",
         "score": 1092930,
         "level": 11,
         "time": "11:47",
-        "rank": 27
+        "rank": 28
     },
     {
         "name": "ALESSANDRO",
         "score": 998950,
         "level": 10,
         "time": "01:45",
-        "rank": 28
+        "rank": 29
     }
 ]
