@@ -287,31 +287,38 @@
         "rank": 41
     },
     {
+        "name": "LIUK",
+        "score": 1098540,
+        "level": 11,
+        "time": "02:26",
+        "rank": 42
+    },
+    {
         "name": "NICC",
         "score": 1098320,
         "level": 11,
         "time": "02:48",
-        "rank": 42
+        "rank": 43
     },
     {
         "name": "SIMO",
         "score": 1098250,
         "level": 11,
         "time": "02:55",
-        "rank": 43
+        "rank": 44
     },
     {
         "name": "ANTO",
         "score": 1092930,
         "level": 11,
         "time": "11:47",
-        "rank": 44
+        "rank": 45
     },
     {
         "name": "ALESSANDRO",
         "score": 998950,
         "level": 10,
         "time": "01:45",
-        "rank": 45
+        "rank": 46
     }
 ]
